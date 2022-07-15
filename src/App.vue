@@ -9,6 +9,11 @@ export default {
   data() {
     return {}
   }
+  // methods: {
+  //   increment() {
+  //     this.$store.commit('setNumber', 1)
+  //   }
+  // }
 }
 </script>
 

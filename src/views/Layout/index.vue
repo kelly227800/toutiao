@@ -27,7 +27,7 @@
         <template #icon>
           <span class="toutiao toutiao-wode"></span>
         </template>
-        我的
+        {{!!$store.state.user.token ? '我的':'未登录'}}
       </van-tabbar-item>
     </van-tabbar>
   </div>
@@ -46,10 +46,10 @@ export default {
 <style lang="less" scoped>
 :deep(.van-tabbar) {
   .van-tabbar-item__text {
-    font-size: 30px;
+    font-size: 25px;
   }
   .toutiao {
-    font-size: 40px;
+    font-size: 35px;
   }
 }
 </style>

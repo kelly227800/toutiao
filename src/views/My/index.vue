@@ -112,7 +112,7 @@ export default {
           data: { data }
         } = await getUserInfo()
         this.userInfo = data
-        console.log(data)
+        // console.log(data)
       }
     }
   }

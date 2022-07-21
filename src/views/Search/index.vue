@@ -1,9 +1,10 @@
 <template>
-  <div>
+  <div class="search-container">
     <form action="/">
       <van-search
         v-model="keywords"
         show-action
+        clearable
         placeholder="请输入搜索关键词"
         @search="onSearch"
         @cancel="backToPrePage"
@@ -17,7 +18,11 @@
     <!-- <SearchHistory />
     <SearchResult/>
     <SearchSuggestion/> -->
-    <component :is="componentName" :keywords="keywords"></component>
+    <component
+      :is="componentName"
+      :keywords="keywords"
+      @changeKeywords="changeKeywordsFn"
+    ></component>
   </div>
 </template>
 
@@ -62,12 +67,21 @@ export default {
       // 如果keywords没有值，显示搜索历史
       // 如果keywords有值，显示搜索结果
       this.isShowSearchResult = false
+    },
+    changeKeywordsFn(value) {
+      // console.log(value)
+      this.keywords = value
+      this.isShowSearchResult = true
     }
   }
 }
 </script>
 
 <style lang="less" scoped>
+.search-container {
+  background-color: #f5f7f9;
+  height: calc(100vh);
+}
 .search {
   [role='button'] {
     color: #fff;

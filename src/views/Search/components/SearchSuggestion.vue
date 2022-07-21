@@ -1,6 +1,10 @@
 <template>
   <div>
-    <van-cell v-for="(item, index) in highlightDate" :key="index">
+    <van-cell
+      v-for="(item, index) in highlightDate"
+      :key="index"
+      @click="fn(index)"
+    >
       <template #icon>
         <van-icon name="search" class="search-icon" />
       </template>
@@ -15,7 +19,8 @@
 // 引入API
 import { getSearchSuggestion } from '@/api'
 export default {
-  data () {
+  name: 'SearchSuggestion',
+  data() {
     return {
       suggestions: []
     }
@@ -30,29 +35,36 @@ export default {
     // 监视属性绑定的函数 如果是methods里面的函数 支持字符串的写法  会自己去找
     keywords: {
       immediate: true, // 先执行一次 避免第一次输入不会发起请求
-      handler () {
+      handler() {
         this.getSearchSuggestion()
       }
     }
   },
   methods: {
-    async getSearchSuggestion () {
+    async getSearchSuggestion() {
       // 获取搜索建议 并处理数据
       try {
         const res = await getSearchSuggestion(this.keywords)
         // 没有关键词的提示
+        // console.log(res)
         this.suggestions = res.data.data.options.filter(Boolean)
+        // console.log(this.suggestions)
         if (this.suggestions.length === 0) {
           this.$toast.fail('没有搜索建议')
         }
       } catch (error) {
         console.log(error)
       }
+    },
+    fn(itemIndex) {
+      const item = this.suggestions[itemIndex]
+      // console.log(item)
+      this.$emit('changeKeywords', item)
     }
   },
   computed: {
     // 计算符合搜索关键词 变颜色
-    highlightDate () {
+    highlightDate() {
       const reg = new RegExp(this.keywords, 'gi') // 定义正则
       return this.suggestions.map((str) =>
         str.replace(reg, (match) => `<span style="color: red">${match}</span>`)

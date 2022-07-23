@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div @click="clickFn">
     <!-- 渲染无图片 -->
     <van-cell
       v-if="articleInfo.cover.type === 0"
@@ -24,7 +24,7 @@
         <!-- 图片 -->
         <div>
           <van-image
-            v-for="(item,index) in articleInfo.cover.images"
+            v-for="(item, index) in articleInfo.cover.images"
             :key="index"
             width="3rem"
             height="2rem"
@@ -52,6 +52,11 @@ export default {
       const art = this.articleInfo
       const time = dayjs(art.pubdate).fromNow()
       return `${art.aut_name} ${art.comm_count}评论 ${time}`
+    }
+  },
+  methods: {
+    clickFn() {
+      this.$emit('click')
     }
   }
 }

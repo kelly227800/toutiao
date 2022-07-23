@@ -1,21 +1,26 @@
 <template>
   <div>
-    <van-pull-refresh v-model="refreshing" @refresh="loadNextPage" success-text="刷新成功~">
-    <van-list
-      @load="loadNextPage"
-      v-model="loading"
-      :finished="finished"
-      finished-text="没有更多了"
-      :immediate-check="false"
-      :error.sync="error"
-      error-text="加载失败，点击重新加载"
+    <van-pull-refresh
+      v-model="refreshing"
+      @refresh="loadNextPage"
+      success-text="刷新成功~"
     >
-      <ArticleItem
-        v-for="(item, index) in articles"
-        :key="index"
-        :articleInfo="item"
-      ></ArticleItem>
-    </van-list>
+      <van-list
+        @load="loadNextPage"
+        v-model="loading"
+        :finished="finished"
+        finished-text="没有更多了"
+        :immediate-check="false"
+        :error.sync="error"
+        error-text="加载失败，点击重新加载"
+      >
+        <ArticleItem
+          v-for="item in articles"
+          :key="item.art_id"
+          :articleInfo="item"
+          @click="clickItem(item.art_id)"
+        ></ArticleItem>
+      </van-list>
     </van-pull-refresh>
   </div>
 </template>
@@ -87,6 +92,10 @@ export default {
         this.loading = false
         this.refreshing = false
       }
+    },
+    clickItem(id) {
+      // console.log(id)
+      this.$router.push('/detail/' + id)
     }
   }
 }

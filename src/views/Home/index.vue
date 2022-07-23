@@ -88,7 +88,7 @@ export default {
       // 删除我的频道
       this.myChannels = this.myChannels.filter((item) => item.id !== id)
       if (!this.isLogin) {
-        console.log(111)
+        // console.log(111)
         // 如果你是离线状态
         // 数据存储在本地存储中
         setMyChannelsToLocal(this.myChannels)

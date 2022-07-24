@@ -54,9 +54,14 @@
         v-html="detailList.content"
       ></div>
       <!-- 正文结束 -->
-      <div class="divider"><van-divider> 正文结束 </van-divider></div>
+      <div class="divider" id="contentEnd">
+        <van-divider> 正文结束 </van-divider>
+      </div>
       <!-- 评论区 -->
-      <CommentList :commentList="commentList"></CommentList>
+      <CommentList
+        :commentList="commentList"
+        @changeCommentList="changeCommentListFn"
+      ></CommentList>
     </main>
     <!-- 底部导航 -->
     <div class="footer">
@@ -66,9 +71,10 @@
         <div class="content" v-else @click="writeComment">写评论</div>
       </div>
       <div class="right">
-        <div class="icon">
-          <div class="num">0</div>
-          <van-icon name="comment-o" />
+        <div class="icon" @click="focusCommentArea">
+          <van-badge :content="totalCount">
+            <van-icon name="comment-o" />
+          </van-badge>
         </div>
         <!-- 收藏 -->
         <div class="icon">
@@ -121,6 +127,8 @@
         <div class="public" @click="publicArticleComment">发布</div>
       </van-popup>
     </div>
+    <!-- 点击回复弹出层展示 -->
+    <CommentPopup @update="updateCommentList"></CommentPopup>
   </div>
 </template>
 
@@ -139,6 +147,7 @@ import {
 } from '@/api'
 import '@/css/news.css'
 import CommentList from './component/CommentList.vue'
+import CommentPopup from './component/CommentPopup.vue'
 import { ImagePreview } from 'vant'
 export default {
   data() {
@@ -146,6 +155,7 @@ export default {
       detailList: {},
       imgList: [],
       commentList: [],
+      totalCount: '',
       isLoading: true,
       isFollow: false,
       isCollect: false,
@@ -172,11 +182,19 @@ export default {
     this.getArticleDetail()
   },
   components: {
-    CommentList
+    CommentList,
+    CommentPopup
   },
   methods: {
     backToPrePage() {
       this.$router.back()
+    },
+    // 点击底部评论图标跳转到评论区位置
+    focusCommentArea() {
+      const contentEnd = document.querySelector('#contentEnd')
+      if (contentEnd) {
+        contentEnd.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      }
     },
     // 获取文章详情
     async getArticleDetail() {
@@ -210,12 +228,17 @@ export default {
     async getCommentList() {
       try {
         const res = await getCommentList(this.detailList.art_id)
-        //   console.log(res)
+        // console.log(res)
         this.commentList = res.data.data.results
+        this.totalCount = res.data.data.total_count
         console.log(this.commentList)
       } catch (err) {
         this.$toast.fail('获取失败请重试')
       }
+    },
+    // 回复后评论区回复数更新
+    updateCommentList() {
+      this.getCommentList()
     },
     // 关注用户
     async followUserFn() {
@@ -299,12 +322,17 @@ export default {
         console.log(res)
         this.getCommentList()
         this.$toast.success('评论成功')
-        this.showCommentPopup = false
         this.CommentArticleContent = ''
+        this.totalCount++
       } catch (err) {
         this.$toast.fail('评论失败')
+      } finally {
         this.showCommentPopup = false
       }
+    },
+    // 修改评论列表
+    changeCommentListFn(addList) {
+      this.commentList.push(...addList)
     }
   }
 }
@@ -432,19 +460,8 @@ main {
     .icon {
       flex: 1;
       position: relative;
-      .num {
-        position: absolute;
-        top: -6px;
-        right: 16px;
-        width: 28px;
-        height: 28px;
-        background-color: #e22829;
-        border-radius: 50%;
-        text-align: center;
-        line-height: 28px;
-        font-size: 24px;
-        color: #fff;
-        z-index: 1;
+      :deep(.van-badge--fixed) {
+        top: 5px;
       }
       .van-icon {
         font-size: 42px;

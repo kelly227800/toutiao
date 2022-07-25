@@ -310,24 +310,28 @@ export default {
     },
     // 评论文章
     async publicArticleComment() {
-      this.$toast.loading({
-        message: '发布中...',
-        forbidClick: true
-      })
-      try {
-        const res = await CommentArticle(
-          this.detailList.art_id,
-          this.CommentArticleContent
-        )
-        console.log(res)
-        this.getCommentList()
-        this.$toast.success('评论成功')
-        this.CommentArticleContent = ''
-        this.totalCount++
-      } catch (err) {
-        this.$toast.fail('评论失败')
-      } finally {
-        this.showCommentPopup = false
+      if (this.CommentArticleContent.trim() !== '') {
+        this.$toast.loading({
+          message: '发布中...',
+          forbidClick: true
+        })
+        try {
+          const res = await CommentArticle(
+            this.detailList.art_id,
+            this.CommentArticleContent
+          )
+          console.log(res)
+          this.getCommentList()
+          this.$toast.success('评论成功')
+          this.CommentArticleContent = ''
+          this.totalCount++
+        } catch (err) {
+          this.$toast.fail('评论失败')
+        } finally {
+          this.showCommentPopup = false
+        }
+      } else {
+        this.$toast('请输入评论内容')
       }
     },
     // 修改评论列表

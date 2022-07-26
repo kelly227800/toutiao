@@ -13,11 +13,6 @@
         class="search"
       />
     </form>
-
-    <!-- 搜索结果/历史/建议 -->
-    <!-- <SearchHistory />
-    <SearchResult/>
-    <SearchSuggestion/> -->
     <component
       :is="componentName"
       :keywords="keywords"

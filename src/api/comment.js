@@ -46,7 +46,11 @@ export const LikeComment = (target) => {
     data: { target }
   })
 }
-
+/**
+ * 取消对评论或评论回复点赞
+ * @param {*} target 取消点赞的评论id
+ * @returns promise
+ */
 export const cancelLikeComment = (target) => {
   return request({
     url: `/v1_0/comment/likings/${target}`,

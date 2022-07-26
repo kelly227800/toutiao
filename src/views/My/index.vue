@@ -18,7 +18,7 @@
           </van-col>
           <van-col span="11">
             <van-row class="code-row" type="flex" justify="end" align="center">
-              <van-button class="code-btn" size="mini" round
+              <van-button class="code-btn" size="mini" round @click="toUser"
                 >编辑资料</van-button
               >
             </van-row>
@@ -114,6 +114,10 @@ export default {
         this.userInfo = data
         // console.log(data)
       }
+    },
+    // 跳转去用户编辑页面
+    toUser() {
+      this.$router.push('/user')
     }
   }
 }
